@@ -7,8 +7,12 @@ const nextConfig: NextConfig = {
     unoptimized: true
   },
   // Configuração para GitHub Pages
-  basePath: process.env.NODE_ENV === 'production' ? '/financeiro' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/financeiro/' : '',
+  basePath: process.env.NODE_ENV === 'production' ? '' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
+  // Desabilitar algumas funcionalidades para export
+  experimental: {
+    appDir: true
+  }
 }
 
 export default nextConfig
