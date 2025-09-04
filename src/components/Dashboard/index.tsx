@@ -21,6 +21,14 @@ const Dashboard: React.FC = () => {
 
   return (
     <StyledContainer maxWidth="xl">
+      <BalanceTable
+        balances={data.balances}
+        debts={data.debts}
+        onAddBalance={addBalance}
+        onUpdateBalance={updateBalance}
+        onDeleteBalance={deleteBalance}
+      />
+      
       <DebtsTable
         cards={data.cards}
         debts={data.debts}
