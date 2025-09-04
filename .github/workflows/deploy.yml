@@ -38,9 +38,6 @@ jobs:
         NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
       run: npm run build
       
-    - name: Copy HTML file
-      run: cp public/index.html out/index.html
-      
     - name: Setup Pages
       uses: actions/configure-pages@v4
       
