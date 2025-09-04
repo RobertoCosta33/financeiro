@@ -30,10 +30,14 @@ export const useFinancialData = () => {
   // Carregar dados do Supabase quando usuário estiver autenticado
   useEffect(() => {
     const loadData = async () => {
-      if (isAuthenticated && user) {
-        const cloudData = await loadFinancialData(user.id);
-        if (cloudData) {
-          setData(cloudData);
+      if (isAuthenticated && user && process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co') {
+        try {
+          const cloudData = await loadFinancialData(user.id);
+          if (cloudData) {
+            setData(cloudData);
+          }
+        } catch (error) {
+          console.error('Erro ao carregar dados:', error);
         }
       }
     };
@@ -44,8 +48,16 @@ export const useFinancialData = () => {
   // Salvar dados no Supabase quando autenticado, ou localStorage quando não
   useEffect(() => {
     const saveData = async () => {
-      if (isAuthenticated && user) {
-        await saveFinancialData(data, user.id);
+      if (isAuthenticated && user && process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co') {
+        try {
+          await saveFinancialData(data, user.id);
+        } catch (error) {
+          console.error('Erro ao salvar dados:', error);
+          // Fallback para localStorage
+          if (typeof window !== 'undefined') {
+            saveToLocalStorage(data);
+          }
+        }
       } else if (typeof window !== 'undefined') {
         saveToLocalStorage(data);
       }

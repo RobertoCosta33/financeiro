@@ -7,11 +7,22 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Verificar se estamos no servidor ou se o Supabase está configurado
+    if (typeof window === 'undefined' || !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://placeholder.supabase.co') {
+      setLoading(false);
+      return;
+    }
+
     // Verificar usuário atual
     const getCurrentUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      setLoading(false);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+        setLoading(false);
+      } catch (error) {
+        console.error('Erro ao obter usuário:', error);
+        setLoading(false);
+      }
     };
 
     getCurrentUser();
