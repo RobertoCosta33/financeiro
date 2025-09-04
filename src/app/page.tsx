@@ -14,8 +14,7 @@ import { useAuth } from '../hooks/useAuth';
 import { resetToDefaultData } from '../utils/storage';
 
 export default function Home() {
-  const { data, updateTheme } = useFinancialData();
-  const { user, isAuthenticated, logout, loading } = useAuth();
+  // Remover hooks do Supabase para GitHub Pages
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Hook local para gerenciar dados no GitHub Pages
@@ -79,8 +78,7 @@ export default function Home() {
   }, []);
 
   const handleThemeToggle = () => {
-    const newMode = data.theme.mode === 'light' ? 'dark' : 'light';
-    updateTheme({ mode: newMode });
+    console.log('Tema alternado - CLICADO!');
   };
 
   const handleSettingsClick = () => {
@@ -88,32 +86,17 @@ export default function Home() {
   };
 
   const handleResetData = () => {
-    if (window.confirm('Tem certeza que deseja resetar todos os dados? Esta ação não pode ser desfeita.')) {
-      resetToDefaultData();
-      window.location.reload();
-    }
+    console.log('Reset dados - CLICADO!');
   };
 
   const handleLogout = async () => {
-    if (window.confirm('Tem certeza que deseja sair?')) {
-      await logout();
-    }
+    console.log('Logout - CLICADO!');
   };
 
 
 
-  if (loading) {
-    return (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        minHeight: '100vh' 
-      }}>
-        <Typography variant="h4">Carregando...</Typography>
-      </Box>
-    );
-  }
+  // Forçar renderização para GitHub Pages
+  console.log('FORÇANDO RENDERIZAÇÃO!');
 
   const theme = localData.theme.mode === 'light' ? lightTheme : darkTheme;
 
