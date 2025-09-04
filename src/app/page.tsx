@@ -4,27 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 
 export default function Home() {
-  const [mounted, setMounted] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        minHeight: '100vh',
-        flexDirection: 'column',
-        gap: 2
-      }}>
-        <Typography variant="h4">Carregando...</Typography>
-      </Box>
-    );
-  }
 
   return (
     <Box sx={{ 
