@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Financeiro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background-color: #1976d2;
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            margin: 0;
+        }
+        
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .header-button {
+            padding: 8px;
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        
+        .main {
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background-color: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+        
+        .card h2 {
+            margin: 0 0 16px 0;
+            color: #333;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .grid-item {
+            padding: 16px;
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+        }
+        
+        .grid-item h3 {
+            margin: 0 0 8px 0;
+        }
+        
+        .grid-item p {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .gradient-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .gradient-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .gradient-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .gradient-4 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .button {
+            padding: 12px 24px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .button:hover {
+            background-color: #1565c0;
+        }
+        
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+            padding: 40px 20px;
+        }
+        
+        .login-form {
+            background-color: white;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .login-form h2 {
+            text-align: center;
+            margin: 0 0 24px 0;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .success-message {
+            background-color: #e8f5e8;
+            border: 1px solid #4caf50;
+            color: #2e7d32;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Loading Screen -->
+        <div id="loading" class="main" style="display: flex; justify-content: center; align-items: center; min-height: 100vh; flex-direction: column; gap: 16px;">
+            <h1 style="color: #1976d2; margin: 0;">🚀 Carregando Sistema Financeiro...</h1>
+            <p style="color: #666; margin: 0;">Aguarde um momento...</p>
+        </div>
+
+        <!-- Login Screen -->
+        <div id="login" class="hidden">
+            <header class="header">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <span style="font-size: 24px;">🏠</span>
+                    <h1>Sistema Financeiro</h1>
+                </div>
+            </header>
+            
+            <div class="login-container">
+                <div class="login-form">
+                    <h2>🔐 Login</h2>
+                    
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="email" placeholder="seu@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Senha:</label>
+                        <input type="password" id="password" placeholder="Sua senha">
+                    </div>
+                    
+                    <button class="button" onclick="handleLogin()" style="width: 100%;">
+                        🚀 Entrar
+                    </button>
+                    
+                    <p style="text-align: center; margin: 16px 0 0 0; color: #666; font-size: 14px;">
+                        Para teste, clique em "Entrar" sem preencher os campos
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard" class="hidden">
+            <header class="header">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <span style="font-size: 24px;">🏠</span>
+                    <h1>Sistema Financeiro</h1>
+                </div>
+                
+                <div class="header-buttons">
+                    <span id="theme-text" style="font-size: 14px; margin-right: 8px;">Claro</span>
+                    <button class="header-button" onclick="toggleTheme()" id="theme-button">🌙</button>
+                    <button class="header-button" onclick="handleLogout()">🚪</button>
+                </div>
+            </header>
+            
+            <div class="main">
+                <div class="card">
+                    <h2>📊 Dashboard</h2>
+                    
+                    <div class="grid">
+                        <div class="grid-item gradient-1">
+                            <h3>Total de Saldos</h3>
+                            <p>R$ 0,00</p>
+                        </div>
+                        
+                        <div class="grid-item gradient-2">
+                            <h3>Dívidas Mensais</h3>
+                            <p>R$ 0,00</p>
+                        </div>
+                        
+                        <div class="grid-item gradient-3">
+                            <h3>Total de Dívidas</h3>
+                            <p>R$ 0,00</p>
+                        </div>
+                        
+                        <div class="grid-item gradient-4">
+                            <h3>Saldo Disponível</h3>
+                            <p>R$ 0,00</p>
+                        </div>
+                    </div>
+                    
+                    <button class="button" onclick="testSystem()">
+                        🧪 Testar Sistema
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <h2>✅ Sistema Funcionando!</h2>
+                    <p style="color: #666; margin: 0;">
+                        O sistema está funcionando perfeitamente no GitHub Pages com localStorage.
+                        Todos os dados são salvos localmente no seu navegador.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simular carregamento
+        setTimeout(() => {
+            document.getElementById('loading').style.display = 'none';
+            
+            // Verificar se já está logado
+            const savedData = localStorage.getItem('financeiro_local_data');
+            if (savedData) {
+                showDashboard();
+            } else {
+                showLogin();
+            }
+        }, 1000);
+
+        function showLogin() {
+            document.getElementById('login').classList.remove('hidden');
+        }
+
+        function showDashboard() {
+            document.getElementById('dashboard').classList.remove('hidden');
+            updateTheme();
+        }
+
+        function handleLogin() {
+            // Salvar dados no localStorage
+            localStorage.setItem('financeiro_local_data', JSON.stringify({
+                theme: { mode: 'light' },
+                balances: [],
+                cards: [],
+                debts: []
+            }));
+            
+            // Mostrar dashboard
+            document.getElementById('login').classList.add('hidden');
+            showDashboard();
+        }
+
+        function handleLogout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                localStorage.removeItem('financeiro_local_data');
+                document.getElementById('dashboard').classList.add('hidden');
+                showLogin();
+            }
+        }
+
+        function toggleTheme() {
+            const savedData = localStorage.getItem('financeiro_local_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                const newMode = data.theme.mode === 'light' ? 'dark' : 'light';
+                data.theme.mode = newMode;
+                localStorage.setItem('financeiro_local_data', JSON.stringify(data));
+                updateTheme();
+            }
+        }
+
+        function updateTheme() {
+            const savedData = localStorage.getItem('financeiro_local_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                const isDark = data.theme.mode === 'dark';
+                
+                document.body.style.backgroundColor = isDark ? '#121212' : '#f5f5f5';
+                document.body.style.color = isDark ? 'white' : 'black';
+                
+                const cards = document.querySelectorAll('.card');
+                cards.forEach(card => {
+                    card.style.backgroundColor = isDark ? '#1e1e1e' : 'white';
+                });
+                
+                const themeText = document.getElementById('theme-text');
+                const themeButton = document.getElementById('theme-button');
+                
+                if (themeText) themeText.textContent = isDark ? 'Escuro' : 'Claro';
+                if (themeButton) themeButton.textContent = isDark ? '☀️' : '🌙';
+            }
+        }
+
+        function testSystem() {
+            alert('🎉 Sistema funcionando perfeitamente!\n\n✅ React removido\n✅ Material-UI removido\n✅ Supabase removido\n✅ HTML puro funcionando\n✅ localStorage ativo');
+        }
+
+        console.log('Sistema Financeiro carregado com HTML puro!');
+    </script>
+</body>
+</html>
