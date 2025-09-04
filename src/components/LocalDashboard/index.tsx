@@ -34,9 +34,22 @@ const LocalDashboard: React.FC<LocalDashboardProps> = ({ data, onUpdateData }) =
   const [balanceFormOpen, setBalanceFormOpen] = useState(false);
 
   const handleAddBalance = () => {
-    // Implementar adição de saldo
-    console.log('Adicionar saldo - CLICADO!');
-    alert('Botão "Adicionar Saldo" foi clicado!');
+    // Teste simples com JavaScript básico
+    try {
+      console.log('Adicionar saldo - CLICADO!');
+      window.alert('Botão "Adicionar Saldo" foi clicado!');
+    } catch (error) {
+      console.error('Erro no botão:', error);
+    }
+  };
+
+  const handleAddCard = () => {
+    try {
+      console.log('Adicionar cartão - CLICADO!');
+      window.alert('Botão "Adicionar Cartão" foi clicado!');
+    } catch (error) {
+      console.error('Erro no botão cartão:', error);
+    }
   };
 
   const totalBalances = data.balances.reduce((sum: number, balance: any) => sum + (balance.amount || 0), 0);
@@ -46,6 +59,19 @@ const LocalDashboard: React.FC<LocalDashboardProps> = ({ data, onUpdateData }) =
 
   return (
     <Box sx={{ padding: 3 }}>
+      {/* Botão de teste simples */}
+      <Box sx={{ mb: 2, p: 2, bgcolor: 'yellow', border: '2px solid red' }}>
+        <button 
+          onClick={() => {
+            console.log('BOTÃO HTML SIMPLES CLICADO!');
+            window.alert('BOTÃO HTML SIMPLES FUNCIONA!');
+          }}
+          style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: 'red', color: 'white', border: 'none', borderRadius: '5px' }}
+        >
+          TESTE BOTÃO HTML SIMPLES
+        </button>
+      </Box>
+
       <Paper sx={{ padding: 3, marginBottom: 3, borderRadius: 3, boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}>
         <Box sx={{ 
           display: 'flex', 
@@ -63,6 +89,7 @@ const LocalDashboard: React.FC<LocalDashboardProps> = ({ data, onUpdateData }) =
             variant="contained"
             startIcon={<AddIcon />}
             onClick={handleAddBalance}
+            sx={{ backgroundColor: 'red' }}
           >
             Adicionar Saldo
           </Button>
@@ -172,7 +199,7 @@ const LocalDashboard: React.FC<LocalDashboardProps> = ({ data, onUpdateData }) =
                         variant="outlined"
                         startIcon={<AddIcon />}
                         onClick={handleAddBalance}
-                        sx={{ mt: 2 }}
+                        sx={{ mt: 2, backgroundColor: 'red' }}
                       >
                         Adicionar Primeiro Saldo
                       </Button>
@@ -198,10 +225,8 @@ const LocalDashboard: React.FC<LocalDashboardProps> = ({ data, onUpdateData }) =
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => {
-              console.log('Adicionar cartão - CLICADO!');
-              alert('Botão "Adicionar Cartão" foi clicado!');
-            }}
+            onClick={handleAddCard}
+            sx={{ backgroundColor: 'red' }}
           >
             Adicionar Cartão
           </Button>
