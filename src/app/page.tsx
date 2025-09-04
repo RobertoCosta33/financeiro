@@ -1,152 +1,114 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
-import { lightTheme, darkTheme } from '../templates/theme';
-import Header from '../components/Header';
-import Dashboard from '../components/Dashboard';
-import LocalDashboard from '../components/LocalDashboard';
-import { LoginForm } from '../components/Auth/LoginForm';
-import { useFinancialData } from '../hooks/useFinancialData';
-import { useAuth } from '../hooks/useAuth';
-import { resetToDefaultData } from '../utils/storage';
+import React from 'react';
 
 export default function Home() {
-  // Remover hooks do Supabase para GitHub Pages
-  const [settingsOpen, setSettingsOpen] = useState(false);
-
-  // Hook local para gerenciar dados no GitHub Pages
-  const [localFinancialData, setLocalFinancialData] = useState({
-    balances: [],
-    cards: [],
-    debts: []
-  });
-
-  const [localData, setLocalData] = useState<{
-    theme: { mode: 'light' | 'dark' };
-    balances: unknown[];
-    cards: unknown[];
-    debts: unknown[];
-  }>({
-    theme: { mode: 'light' },
-    balances: [],
-    cards: [],
-    debts: []
-  });
-
-  useEffect(() => {
-    // Script inline para testar JavaScript
-    console.log('PÁGINA CARREGADA!');
-    
-    // Adicionar listener global para testar cliques
-    const handleGlobalClick = (event: MouseEvent) => {
-      console.log('CLIQUE DETECTADO:', event.target);
-      if (event.target instanceof HTMLElement) {
-        if (event.target.textContent?.includes('TESTE')) {
-          alert('BOTÃO HTML SIMPLES FUNCIONA!');
-        }
-      }
-    };
-
-    document.addEventListener('click', handleGlobalClick);
-
-    // Carregar dados do localStorage
-    const savedData = localStorage.getItem('financeiro_local_data');
-    if (savedData) {
-      try {
-        const parsed = JSON.parse(savedData);
-        if (parsed.theme && (parsed.theme.mode === 'light' || parsed.theme.mode === 'dark')) {
-          setLocalData(parsed as typeof localData);
-        }
-        if (parsed.balances) {
-          setLocalFinancialData({
-            balances: parsed.balances || [],
-            cards: parsed.cards || [],
-            debts: parsed.debts || []
-          });
-        }
-      } catch (e) {
-        console.error('Erro ao carregar dados:', e);
-      }
-    }
-
-    return () => {
-      document.removeEventListener('click', handleGlobalClick);
-    };
-  }, []);
-
-  const handleThemeToggle = () => {
-    console.log('Tema alternado - CLICADO!');
-  };
-
-  const handleSettingsClick = () => {
-    setSettingsOpen(true);
-  };
-
-  const handleResetData = () => {
-    console.log('Reset dados - CLICADO!');
-  };
-
-  const handleLogout = async () => {
-    console.log('Logout - CLICADO!');
-  };
-
-
-
-  // Forçar renderização para GitHub Pages
-  console.log('FORÇANDO RENDERIZAÇÃO!');
-
-  const theme = localData.theme.mode === 'light' ? lightTheme : darkTheme;
-
-  // Para GitHub Pages, sempre mostrar o dashboard
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <Header
-          theme={localData.theme.mode}
-          onThemeToggle={() => {
-            console.log('Tema alternado - CLICADO!');
-            const newMode: 'light' | 'dark' = localData.theme.mode === 'light' ? 'dark' : 'light';
-            const newData = {
-              ...localData,
-              theme: { mode: newMode }
-            };
-            setLocalData(newData);
-            localStorage.setItem('financeiro_local_data', JSON.stringify(newData));
-            alert(`Tema alterado para: ${newMode}`);
-          }}
-          onSettingsClick={handleSettingsClick}
-          onResetData={() => {
-            console.log('Reset dados - CLICADO!');
-            if (window.confirm('Tem certeza que deseja resetar todos os dados?')) {
-              localStorage.removeItem('financeiro_local_data');
-              window.location.reload();
-            }
-          }}
-          onLogout={() => {
-            console.log('Logout - CLICADO!');
-            if (window.confirm('Tem certeza que deseja sair?')) {
-              localStorage.removeItem('financeiro_local_data');
-              window.location.reload();
-            }
-          }}
-          isAuthenticated={true}
-        />
-        <Box component="main" sx={{ flexGrow: 1 }}>
-          <LocalDashboard 
-            data={localFinancialData}
-            onUpdateData={(newData) => {
-              const updatedData = { ...localData, ...newData };
-              setLocalData(updatedData);
-              setLocalFinancialData(newData);
-              localStorage.setItem('financeiro_local_data', JSON.stringify(updatedData));
+    <div style={{ 
+      padding: '20px', 
+      fontFamily: 'Arial, sans-serif',
+      backgroundColor: '#f5f5f5',
+      minHeight: '100vh'
+    }}>
+      <h1 style={{ color: '#1976d2', textAlign: 'center' }}>
+        🎉 SISTEMA FINANCEIRO FUNCIONANDO! 🎉
+      </h1>
+      
+      <div style={{ 
+        backgroundColor: 'white', 
+        padding: '20px', 
+        borderRadius: '10px',
+        margin: '20px auto',
+        maxWidth: '600px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+      }}>
+        <h2 style={{ color: '#333' }}>✅ Página carregada com sucesso!</h2>
+        
+        <p style={{ fontSize: '16px', lineHeight: '1.6' }}>
+          Se você está vendo esta mensagem, significa que:
+        </p>
+        
+        <ul style={{ fontSize: '16px', lineHeight: '1.6' }}>
+          <li>✅ React está funcionando</li>
+          <li>✅ GitHub Pages está servindo os arquivos</li>
+          <li>✅ JavaScript está executando</li>
+        </ul>
+        
+        <div style={{ 
+          marginTop: '20px',
+          padding: '15px',
+          backgroundColor: '#e3f2fd',
+          borderRadius: '5px',
+          border: '1px solid #1976d2'
+        }}>
+          <h3 style={{ color: '#1976d2', margin: '0 0 10px 0' }}>
+            🧪 Teste de Botões:
+          </h3>
+          
+          <button 
+            onClick={() => {
+              console.log('BOTÃO TESTE CLICADO!');
+              alert('🎉 BOTÃO FUNCIONANDO! JavaScript está OK!');
             }}
-          />
-        </Box>
-      </Box>
-    </ThemeProvider>
+            style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#1976d2',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              marginRight: '10px'
+            }}
+          >
+            🧪 Testar JavaScript
+          </button>
+          
+          <button 
+            onClick={() => {
+              console.log('BOTÃO TEMA CLICADO!');
+              alert('🎨 Tema alternado!');
+            }}
+            style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#4caf50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
+          >
+            🎨 Alternar Tema
+          </button>
+        </div>
+        
+        <div style={{ 
+          marginTop: '20px',
+          padding: '15px',
+          backgroundColor: '#fff3e0',
+          borderRadius: '5px',
+          border: '1px solid #ff9800'
+        }}>
+          <h3 style={{ color: '#ff9800', margin: '0 0 10px 0' }}>
+            📊 Próximos Passos:
+          </h3>
+          
+          <p style={{ margin: '0', fontSize: '14px' }}>
+            Se os botões funcionarem, vamos restaurar o layout completo com Material-UI.
+          </p>
+        </div>
+      </div>
+      
+      <div style={{ 
+        textAlign: 'center', 
+        marginTop: '30px',
+        fontSize: '14px',
+        color: '#666'
+      }}>
+        <p>🕐 Timestamp: {new Date().toLocaleString('pt-BR')}</p>
+        <p>🌐 URL: {typeof window !== 'undefined' ? window.location.href : 'Carregando...'}</p>
+      </div>
+    </div>
   );
 }
