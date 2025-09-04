@@ -1,53 +1,63 @@
-'use client';
-
-import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
-
 export default function Home() {
   return (
-    <Box sx={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
       minHeight: '100vh',
       flexDirection: 'column',
-      gap: 3,
-      p: 3
+      gap: '24px',
+      padding: '24px',
+      fontFamily: 'Arial, sans-serif'
     }}>
-      <Typography variant="h3" component="h1" gutterBottom>
+      <h1 style={{ fontSize: '48px', margin: 0 }}>
         💰 Sistema Financeiro
-      </Typography>
+      </h1>
       
-      <Typography variant="h5" color="text.secondary" textAlign="center">
+      <h2 style={{ fontSize: '24px', color: '#666', margin: 0, textAlign: 'center' }}>
         Aplicação Online Funcionando!
-      </Typography>
+      </h2>
 
-      <Box sx={{ mt: 4, p: 3, bgcolor: 'background.paper', borderRadius: 2, maxWidth: 400 }}>
-        <Typography variant="h6" gutterBottom>
+      <div style={{ 
+        marginTop: '32px', 
+        padding: '24px', 
+        backgroundColor: '#f5f5f5', 
+        borderRadius: '8px', 
+        maxWidth: '400px',
+        border: '1px solid #ddd'
+      }}>
+        <h3 style={{ fontSize: '20px', margin: '0 0 16px 0' }}>
           🎉 Status da Aplicação:
-        </Typography>
-        <Typography variant="body1" color="success.main">
+        </h3>
+        <p style={{ color: '#4caf50', margin: '8px 0' }}>
           ✅ React funcionando perfeitamente
-        </Typography>
-        <Typography variant="body1" color="success.main">
-          ✅ Material-UI carregado
-        </Typography>
-        <Typography variant="body1" color="success.main">
+        </p>
+        <p style={{ color: '#4caf50', margin: '8px 0' }}>
+          ✅ Next.js carregado
+        </p>
+        <p style={{ color: '#4caf50', margin: '8px 0' }}>
           ✅ GitHub Pages funcionando
-        </Typography>
-        <Typography variant="body1" color="success.main">
+        </p>
+        <p style={{ color: '#4caf50', margin: '8px 0' }}>
           ✅ Deploy automático ativo
-        </Typography>
-      </Box>
+        </p>
+      </div>
 
-      <Button 
-        variant="contained" 
-        size="large"
+      <button 
+        style={{
+          marginTop: '16px',
+          padding: '12px 24px',
+          fontSize: '16px',
+          backgroundColor: '#1976d2',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
         onClick={() => alert('🎉 Interação funcionando perfeitamente!')}
-        sx={{ mt: 2 }}
       >
         Testar Interação
-      </Button>
-    </Box>
+      </button>
+    </div>
   );
 }
