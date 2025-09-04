@@ -14,11 +14,7 @@ import {
   Logout
 } from '@mui/icons-material';
 import {
-  StyledAppBar,
-  HeaderContent,
-  HeaderLeft,
-  HeaderRight,
-  ThemeToggle
+  StyledAppBar
 } from './styles';
 
 interface HeaderProps {
@@ -33,35 +29,39 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ theme, onThemeToggle, onSettingsClick, onResetData, onLogout, isAuthenticated }) => {
   return (
     <StyledAppBar position="static" elevation={0}>
-      <HeaderContent>
-        <HeaderLeft>
-          <AccountBalance sx={{ fontSize: 32 }} />
-          <Typography variant="h5" component="div" fontWeight="bold">
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        padding: '0 24px', 
+        height: '56px' 
+      }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <AccountBalance sx={{ fontSize: 28 }} />
+          <Typography variant="h6" component="div" fontWeight="bold">
             Sistema Financeiro
           </Typography>
-        </HeaderLeft>
+        </Box>
 
-        <HeaderRight>
-          <ThemeToggle>
-            <Typography variant="body2" color="inherit">
-              {theme === 'light' ? 'Claro' : 'Escuro'}
-            </Typography>
-            <Tooltip title={`Mudar para tema ${theme === 'light' ? 'escuro' : 'claro'}`}>
-              <IconButton
-                color="inherit"
-                onClick={onThemeToggle}
-                size="large"
-              >
-                {theme === 'light' ? <Brightness4 /> : <Brightness7 />}
-              </IconButton>
-            </Tooltip>
-          </ThemeToggle>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography variant="caption" color="inherit" sx={{ mr: 0.5 }}>
+            {theme === 'light' ? 'Claro' : 'Escuro'}
+          </Typography>
+          <Tooltip title={`Mudar para tema ${theme === 'light' ? 'escuro' : 'claro'}`}>
+            <IconButton
+              color="inherit"
+              onClick={onThemeToggle}
+              size="small"
+            >
+              {theme === 'light' ? <Brightness4 /> : <Brightness7 />}
+            </IconButton>
+          </Tooltip>
 
           <Tooltip title="Resetar Dados">
             <IconButton
               color="inherit"
               onClick={onResetData}
-              size="large"
+              size="small"
             >
               <Refresh />
             </IconButton>
@@ -71,7 +71,7 @@ const Header: React.FC<HeaderProps> = ({ theme, onThemeToggle, onSettingsClick, 
             <IconButton
               color="inherit"
               onClick={onSettingsClick}
-              size="large"
+              size="small"
             >
               <Settings />
             </IconButton>
@@ -82,14 +82,14 @@ const Header: React.FC<HeaderProps> = ({ theme, onThemeToggle, onSettingsClick, 
               <IconButton
                 color="inherit"
                 onClick={onLogout}
-                size="large"
+                size="small"
               >
                 <Logout />
               </IconButton>
             </Tooltip>
           )}
-        </HeaderRight>
-      </HeaderContent>
+        </Box>
+      </Box>
     </StyledAppBar>
   );
 };
