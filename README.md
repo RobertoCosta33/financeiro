@@ -159,3 +159,5 @@ Este projeto está sob a licença MIT.
 ---
 
 Desenvolvido com ❤️ para controle financeiro pessoal
+
+## 🚀 Status: Deploy com Supabase ativo
