@@ -6,9 +6,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true
   },
-  // Configuração para GitHub Pages
-  basePath: process.env.NODE_ENV === 'production' ? '' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
+
   // Desabilitar ESLint para build de produção
   eslint: {
     ignoreDuringBuilds: true,

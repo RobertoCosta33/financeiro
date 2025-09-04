@@ -1,6 +1,12 @@
 'use client';
 
 export default function Home() {
+  // Adicionar script inline para garantir que JavaScript funcione
+  if (typeof window !== 'undefined') {
+    window.addEventListener('load', () => {
+      console.log('Página carregada completamente!');
+    });
+  }
   return (
     <div style={{
       display: 'flex',
@@ -56,7 +62,10 @@ export default function Home() {
           borderRadius: '4px',
           cursor: 'pointer'
         }}
-        onClick={() => alert('🎉 Interação funcionando perfeitamente!')}
+        onClick={() => {
+          console.log('Botão clicado!');
+          window.alert('🎉 Interação funcionando perfeitamente!');
+        }}
       >
         Testar Interação
       </button>
