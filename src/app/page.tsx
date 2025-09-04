@@ -106,6 +106,7 @@ export default function Home() {
         <Header
           theme={localData.theme.mode}
           onThemeToggle={() => {
+            console.log('Tema alternado - CLICADO!');
             const newMode: 'light' | 'dark' = localData.theme.mode === 'light' ? 'dark' : 'light';
             const newData = {
               ...localData,
@@ -113,15 +114,22 @@ export default function Home() {
             };
             setLocalData(newData);
             localStorage.setItem('financeiro_local_data', JSON.stringify(newData));
+            alert(`Tema alterado para: ${newMode}`);
           }}
           onSettingsClick={handleSettingsClick}
           onResetData={() => {
-            localStorage.removeItem('financeiro_local_data');
-            window.location.reload();
+            console.log('Reset dados - CLICADO!');
+            if (window.confirm('Tem certeza que deseja resetar todos os dados?')) {
+              localStorage.removeItem('financeiro_local_data');
+              window.location.reload();
+            }
           }}
           onLogout={() => {
-            localStorage.removeItem('financeiro_local_data');
-            window.location.reload();
+            console.log('Logout - CLICADO!');
+            if (window.confirm('Tem certeza que deseja sair?')) {
+              localStorage.removeItem('financeiro_local_data');
+              window.location.reload();
+            }
           }}
           isAuthenticated={true}
         />

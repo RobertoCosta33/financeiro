@@ -35,7 +35,8 @@ const LocalDashboard: React.FC<LocalDashboardProps> = ({ data, onUpdateData }) =
 
   const handleAddBalance = () => {
     // Implementar adição de saldo
-    console.log('Adicionar saldo');
+    console.log('Adicionar saldo - CLICADO!');
+    alert('Botão "Adicionar Saldo" foi clicado!');
   };
 
   const totalBalances = data.balances.reduce((sum: number, balance: any) => sum + (balance.amount || 0), 0);
@@ -197,7 +198,10 @@ const LocalDashboard: React.FC<LocalDashboardProps> = ({ data, onUpdateData }) =
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => console.log('Adicionar cartão')}
+            onClick={() => {
+              console.log('Adicionar cartão - CLICADO!');
+              alert('Botão "Adicionar Cartão" foi clicado!');
+            }}
           >
             Adicionar Cartão
           </Button>
