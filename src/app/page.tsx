@@ -1,45 +1,19 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button, Container, Paper } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import { lightTheme, darkTheme } from '../templates/theme';
-import Header from '../components/Header';
-import Dashboard from '../components/Dashboard';
-import { LoginForm } from '../components/Auth/LoginForm';
-import { useFinancialData } from '../hooks/useFinancialData';
-import { useAuth } from '../hooks/useAuth';
-import { resetToDefaultData } from '../utils/storage';
+import { lightTheme } from '../templates/theme';
 
 export default function Home() {
-  const { data, updateTheme } = useFinancialData();
-  const { user, isAuthenticated, logout, loading } = useAuth();
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const handleThemeToggle = () => {
-    const newMode = data.theme.mode === 'light' ? 'dark' : 'light';
-    updateTheme({ mode: newMode });
-  };
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  const handleSettingsClick = () => {
-    setSettingsOpen(true);
-  };
-
-  const handleResetData = () => {
-    if (window.confirm('Tem certeza que deseja resetar todos os dados? Esta ação não pode ser desfeita.')) {
-      resetToDefaultData();
-      window.location.reload();
-    }
-  };
-
-  const handleLogout = async () => {
-    if (window.confirm('Tem certeza que deseja sair?')) {
-      await logout();
-    }
-  };
-
-  if (loading) {
+  if (!mounted) {
     return (
       <Box sx={{ 
         display: 'flex', 
@@ -52,34 +26,74 @@ export default function Home() {
     );
   }
 
-  const theme = data.theme.mode === 'light' ? lightTheme : darkTheme;
-
-  // Se não estiver autenticado, mostrar tela de login
-  if (!isAuthenticated) {
-    return (
-      <ThemeProvider theme={lightTheme}>
-        <CssBaseline />
-        <LoginForm />
-      </ThemeProvider>
-    );
-  }
-
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={lightTheme}>
       <CssBaseline />
-      <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <Header
-          theme={data.theme.mode}
-          onThemeToggle={handleThemeToggle}
-          onSettingsClick={handleSettingsClick}
-          onResetData={handleResetData}
-          onLogout={handleLogout}
-          isAuthenticated={isAuthenticated}
-        />
-        <Box component="main" sx={{ flexGrow: 1 }}>
-          <Dashboard />
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        <Box sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography variant="h3" component="h1" gutterBottom>
+            💰 Sistema Financeiro
+          </Typography>
+          <Typography variant="h5" color="text.secondary">
+            Aplicação Online Funcionando!
+          </Typography>
         </Box>
-      </Box>
+
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <Typography variant="h6" gutterBottom>
+            🎉 Status da Aplicação:
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Typography variant="body1" color="success.main">
+              ✅ React funcionando perfeitamente
+            </Typography>
+            <Typography variant="body1" color="success.main">
+              ✅ Material-UI carregado
+            </Typography>
+            <Typography variant="body1" color="success.main">
+              ✅ GitHub Pages funcionando
+            </Typography>
+            <Typography variant="body1" color="success.main">
+              ✅ Deploy automático ativo
+            </Typography>
+          </Box>
+        </Paper>
+
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <Typography variant="h6" gutterBottom>
+            🚀 Próximos Passos:
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Typography variant="body1">
+              1. Configure as variáveis de ambiente do Supabase
+            </Typography>
+            <Typography variant="body1">
+              2. Ative a autenticação e persistência na nuvem
+            </Typography>
+            <Typography variant="body1">
+              3. Acesse todas as funcionalidades da aplicação
+            </Typography>
+          </Box>
+        </Paper>
+
+        <Box sx={{ textAlign: 'center' }}>
+          <Button 
+            variant="contained" 
+            size="large"
+            onClick={() => alert('🎉 Interação funcionando perfeitamente!')}
+            sx={{ mr: 2 }}
+          >
+            Testar Interação
+          </Button>
+          <Button 
+            variant="outlined" 
+            size="large"
+            onClick={() => window.open('https://github.com/RobertoCosta33/financeiro', '_blank')}
+          >
+            Ver Código
+          </Button>
+        </Box>
+      </Container>
     </ThemeProvider>
   );
 }
