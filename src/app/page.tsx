@@ -8,13 +8,85 @@ import { lightTheme, darkTheme } from '../templates/theme';
 import Header from '../components/Header';
 import Dashboard from '../components/Dashboard';
 import { LoginForm } from '../components/Auth/LoginForm';
-import { useFinancialData } from '../hooks/useFinancialData';
-import { useAuth } from '../hooks/useAuth';
+
+interface UserData {
+  id: string;
+  email: string;
+  name?: string;
+}
+
+interface ThemeData {
+  mode: 'light' | 'dark';
+}
+
+interface AppData {
+  theme: ThemeData;
+  balances: unknown[];
+  cards: unknown[];
+  debts: unknown[];
+}
 
 export default function Home() {
-  const { data, updateTheme } = useFinancialData();
-  const { user, isAuthenticated, logout, loading } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<UserData | null>(null);
+  const [data, setData] = useState<AppData>({
+    theme: { mode: 'light' },
+    balances: [],
+    cards: [],
+    debts: []
+  });
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  useEffect(() => {
+    // Detectar se estamos no GitHub Pages (sem Supabase)
+    const isGitHubPages = window.location.hostname === 'robertocosta33.github.io';
+    
+    if (isGitHubPages) {
+      // Modo local para GitHub Pages
+      console.log('GitHub Pages detectado - usando modo local');
+      
+      // Carregar dados do localStorage
+      const savedData = localStorage.getItem('financeiro_local_data');
+      if (savedData) {
+        try {
+          const parsed = JSON.parse(savedData) as AppData;
+          setData(parsed);
+          setIsAuthenticated(true);
+        } catch (e) {
+          console.error('Erro ao carregar dados:', e);
+        }
+      }
+      
+      setLoading(false);
+    } else {
+      // Modo Supabase para desenvolvimento local
+      console.log('Desenvolvimento local - usando Supabase');
+      
+      // Simular carregamento do Supabase
+      setTimeout(() => {
+        setLoading(false);
+        // Aqui você pode adicionar a lógica real do Supabase
+      }, 1000);
+    }
+  }, []);
+
+  const updateTheme = (newTheme: ThemeData) => {
+    const newData = { ...data, theme: newTheme };
+    setData(newData);
+    localStorage.setItem('financeiro_local_data', JSON.stringify(newData));
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUser(null);
+    localStorage.removeItem('financeiro_local_data');
+  };
+
+  const handleLogin = (userData: UserData) => {
+    setIsAuthenticated(true);
+    setUser(userData);
+  };
 
   // Se ainda está carregando, mostrar loading
   if (loading) {
@@ -77,17 +149,17 @@ export default function Home() {
         <Header
           theme={data.theme.mode}
           onThemeToggle={() => {
-            const newMode = data.theme.mode === 'light' ? 'dark' : 'light';
+            const newMode: 'light' | 'dark' = data.theme.mode === 'light' ? 'dark' : 'light';
             updateTheme({ mode: newMode });
           }}
           onSettingsClick={() => setSettingsOpen(true)}
           onResetData={() => {
             if (window.confirm('Tem certeza que deseja resetar todos os dados?')) {
-              // Implementar reset
-              console.log('Reset dados');
+              localStorage.removeItem('financeiro_local_data');
+              window.location.reload();
             }
           }}
-          onLogout={logout}
+          onLogout={handleLogout}
           isAuthenticated={true}
         />
         <Box component="main" sx={{ flexGrow: 1 }}>
