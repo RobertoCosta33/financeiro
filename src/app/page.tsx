@@ -25,6 +25,59 @@ export default function Home() {
     debts: []
   });
 
+  const [localData, setLocalData] = useState<{
+    theme: { mode: 'light' | 'dark' };
+    balances: unknown[];
+    cards: unknown[];
+    debts: unknown[];
+  }>({
+    theme: { mode: 'light' },
+    balances: [],
+    cards: [],
+    debts: []
+  });
+
+  useEffect(() => {
+    // Script inline para testar JavaScript
+    console.log('PÁGINA CARREGADA!');
+    
+    // Adicionar listener global para testar cliques
+    const handleGlobalClick = (event: MouseEvent) => {
+      console.log('CLIQUE DETECTADO:', event.target);
+      if (event.target instanceof HTMLElement) {
+        if (event.target.textContent?.includes('TESTE')) {
+          alert('BOTÃO HTML SIMPLES FUNCIONA!');
+        }
+      }
+    };
+
+    document.addEventListener('click', handleGlobalClick);
+
+    // Carregar dados do localStorage
+    const savedData = localStorage.getItem('financeiro_local_data');
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        if (parsed.theme && (parsed.theme.mode === 'light' || parsed.theme.mode === 'dark')) {
+          setLocalData(parsed as typeof localData);
+        }
+        if (parsed.balances) {
+          setLocalFinancialData({
+            balances: parsed.balances || [],
+            cards: parsed.cards || [],
+            debts: parsed.debts || []
+          });
+        }
+      } catch (e) {
+        console.error('Erro ao carregar dados:', e);
+      }
+    }
+
+    return () => {
+      document.removeEventListener('click', handleGlobalClick);
+    };
+  }, []);
+
   const handleThemeToggle = () => {
     const newMode = data.theme.mode === 'light' ? 'dark' : 'light';
     updateTheme({ mode: newMode });
@@ -47,43 +100,9 @@ export default function Home() {
     }
   };
 
-  // Para GitHub Pages, vamos usar localStorage em vez de Supabase
-  const [isLocalMode, setIsLocalMode] = useState(true);
-  const [localData, setLocalData] = useState<{
-    theme: { mode: 'light' | 'dark' };
-    balances: unknown[];
-    cards: unknown[];
-    debts: unknown[];
-  }>({
-    theme: { mode: 'light' },
-    balances: [],
-    cards: [],
-    debts: []
-  });
 
-  useEffect(() => {
-    // Carregar dados do localStorage
-    const savedData = localStorage.getItem('financeiro_local_data');
-    if (savedData) {
-      try {
-        const parsed = JSON.parse(savedData);
-        if (parsed.theme && (parsed.theme.mode === 'light' || parsed.theme.mode === 'dark')) {
-          setLocalData(parsed as typeof localData);
-        }
-        if (parsed.balances) {
-          setLocalFinancialData({
-            balances: parsed.balances || [],
-            cards: parsed.cards || [],
-            debts: parsed.debts || []
-          });
-        }
-      } catch (e) {
-        console.error('Erro ao carregar dados:', e);
-      }
-    }
-  }, []);
 
-  if (loading && !isLocalMode) {
+  if (loading) {
     return (
       <Box sx={{ 
         display: 'flex', 
