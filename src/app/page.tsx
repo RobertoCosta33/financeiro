@@ -39,7 +39,37 @@ export default function Home() {
     }
   };
 
-  if (loading) {
+  // Para GitHub Pages, vamos usar localStorage em vez de Supabase
+  const [isLocalMode, setIsLocalMode] = useState(true);
+  const [localData, setLocalData] = useState<{
+    theme: { mode: 'light' | 'dark' };
+    balances: unknown[];
+    cards: unknown[];
+    debts: unknown[];
+  }>({
+    theme: { mode: 'light' },
+    balances: [],
+    cards: [],
+    debts: []
+  });
+
+  useEffect(() => {
+    // Carregar dados do localStorage
+    const savedData = localStorage.getItem('financeiro_local_data');
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        if (parsed.theme && (parsed.theme.mode === 'light' || parsed.theme.mode === 'dark')) {
+          // @ts-ignore
+          setLocalData(parsed);
+        }
+      } catch (e) {
+        console.error('Erro ao carregar dados:', e);
+      }
+    }
+  }, []);
+
+  if (loading && !isLocalMode) {
     return (
       <Box sx={{ 
         display: 'flex', 
@@ -52,17 +82,40 @@ export default function Home() {
     );
   }
 
-  const theme = data.theme.mode === 'light' ? lightTheme : darkTheme;
+  const theme = localData.theme.mode === 'light' ? lightTheme : darkTheme;
 
-  // Se não estiver autenticado, mostrar tela de login
-  if (!isAuthenticated) {
-    return (
-      <ThemeProvider theme={lightTheme}>
-        <CssBaseline />
-        <LoginForm />
-      </ThemeProvider>
-    );
-  }
+  // Para GitHub Pages, sempre mostrar o dashboard
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Header
+          theme={localData.theme.mode}
+          onThemeToggle={() => {
+            const newData = {
+              ...localData,
+              theme: { mode: localData.theme.mode === 'light' ? 'dark' : 'light' }
+            };
+            setLocalData(newData);
+            localStorage.setItem('financeiro_local_data', JSON.stringify(newData));
+          }}
+          onSettingsClick={handleSettingsClick}
+          onResetData={() => {
+            localStorage.removeItem('financeiro_local_data');
+            window.location.reload();
+          }}
+          onLogout={() => {
+            localStorage.removeItem('financeiro_local_data');
+            window.location.reload();
+          }}
+          isAuthenticated={true}
+        />
+        <Box component="main" sx={{ flexGrow: 1 }}>
+          <Dashboard />
+        </Box>
+      </Box>
+    </ThemeProvider>
+  );
 
   return (
     <ThemeProvider theme={theme}>
