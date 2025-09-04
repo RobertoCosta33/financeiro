@@ -7,6 +7,7 @@ import { CssBaseline } from '@mui/material';
 import { lightTheme, darkTheme } from '../templates/theme';
 import Header from '../components/Header';
 import Dashboard from '../components/Dashboard';
+import LocalDashboard from '../components/LocalDashboard';
 import { LoginForm } from '../components/Auth/LoginForm';
 import { useFinancialData } from '../hooks/useFinancialData';
 import { useAuth } from '../hooks/useAuth';
@@ -16,6 +17,13 @@ export default function Home() {
   const { data, updateTheme } = useFinancialData();
   const { user, isAuthenticated, logout, loading } = useAuth();
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  // Hook local para gerenciar dados no GitHub Pages
+  const [localFinancialData, setLocalFinancialData] = useState({
+    balances: [],
+    cards: [],
+    debts: []
+  });
 
   const handleThemeToggle = () => {
     const newMode = data.theme.mode === 'light' ? 'dark' : 'light';
@@ -60,8 +68,14 @@ export default function Home() {
       try {
         const parsed = JSON.parse(savedData);
         if (parsed.theme && (parsed.theme.mode === 'light' || parsed.theme.mode === 'dark')) {
-          // @ts-ignore
-          setLocalData(parsed);
+          setLocalData(parsed as typeof localData);
+        }
+        if (parsed.balances) {
+          setLocalFinancialData({
+            balances: parsed.balances || [],
+            cards: parsed.cards || [],
+            debts: parsed.debts || []
+          });
         }
       } catch (e) {
         console.error('Erro ao carregar dados:', e);
@@ -92,9 +106,10 @@ export default function Home() {
         <Header
           theme={localData.theme.mode}
           onThemeToggle={() => {
+            const newMode: 'light' | 'dark' = localData.theme.mode === 'light' ? 'dark' : 'light';
             const newData = {
               ...localData,
-              theme: { mode: localData.theme.mode === 'light' ? 'dark' : 'light' }
+              theme: { mode: newMode }
             };
             setLocalData(newData);
             localStorage.setItem('financeiro_local_data', JSON.stringify(newData));
@@ -111,26 +126,15 @@ export default function Home() {
           isAuthenticated={true}
         />
         <Box component="main" sx={{ flexGrow: 1 }}>
-          <Dashboard />
-        </Box>
-      </Box>
-    </ThemeProvider>
-  );
-
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <Header
-          theme={data.theme.mode}
-          onThemeToggle={handleThemeToggle}
-          onSettingsClick={handleSettingsClick}
-          onResetData={handleResetData}
-          onLogout={handleLogout}
-          isAuthenticated={isAuthenticated}
-        />
-        <Box component="main" sx={{ flexGrow: 1 }}>
-          <Dashboard />
+          <LocalDashboard 
+            data={localFinancialData}
+            onUpdateData={(newData) => {
+              const updatedData = { ...localData, ...newData };
+              setLocalData(updatedData);
+              setLocalFinancialData(newData);
+              localStorage.setItem('financeiro_local_data', JSON.stringify(updatedData));
+            }}
+          />
         </Box>
       </Box>
     </ThemeProvider>
