@@ -8,13 +8,73 @@ import { lightTheme, darkTheme } from '../templates/theme';
 import Header from '../components/Header';
 import Dashboard from '../components/Dashboard';
 import { LoginForm } from '../components/Auth/LoginForm';
-import { useFinancialData } from '../hooks/useFinancialData';
-import { useAuth } from '../hooks/useAuth';
 
 export default function Home() {
-  const { data, updateTheme, addBalance, addCard, addDebt } = useFinancialData();
-  const { user, isAuthenticated, login, logout, loading } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [data, setData] = useState({
+    theme: { mode: 'light' as 'light' | 'dark' },
+    balances: [],
+    cards: [],
+    debts: []
+  });
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  useEffect(() => {
+    // Detectar se Supabase está disponível
+    const hasSupabase = process.env.NEXT_PUBLIC_SUPABASE_URL && 
+                       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY &&
+                       process.env.NEXT_PUBLIC_SUPABASE_URL !== 'placeholder' &&
+                       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== 'placeholder';
+    
+    if (hasSupabase) {
+      console.log('Supabase disponível - tentando conectar...');
+      // Simular carregamento do Supabase
+      setTimeout(() => {
+        setLoading(false);
+        // Aqui você pode adicionar a lógica real do Supabase
+      }, 2000);
+    } else {
+      console.log('Supabase não disponível - usando modo local');
+      // Modo local com localStorage
+      setTimeout(() => {
+        setLoading(false);
+        
+        // Carregar dados do localStorage
+        const savedData = localStorage.getItem('financeiro_local_data');
+        if (savedData) {
+          try {
+            const parsed = JSON.parse(savedData);
+            setData(parsed);
+            setIsAuthenticated(true);
+          } catch (e) {
+            console.error('Erro ao carregar dados:', e);
+          }
+        }
+      }, 1000);
+    }
+  }, []);
+
+  const updateTheme = (newTheme: { mode: 'light' | 'dark' }) => {
+    const newData = { ...data, theme: newTheme };
+    setData(newData);
+    localStorage.setItem('financeiro_local_data', JSON.stringify(newData));
+  };
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem('financeiro_local_data', JSON.stringify({
+      theme: { mode: 'light' },
+      balances: [],
+      cards: [],
+      debts: []
+    }));
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('financeiro_local_data');
+  };
 
   // Se ainda está carregando, mostrar loading
   if (loading) {
@@ -33,7 +93,7 @@ export default function Home() {
             🚀 Carregando Sistema Financeiro...
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Conectando com Supabase...
+            {process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Conectando com Supabase...' : 'Carregando modo local...'}
           </Typography>
         </Box>
       </ThemeProvider>
@@ -83,11 +143,11 @@ export default function Home() {
           onSettingsClick={() => setSettingsOpen(true)}
           onResetData={() => {
             if (window.confirm('Tem certeza que deseja resetar todos os dados?')) {
-              // Implementar reset no Supabase
-              console.log('Reset dados no Supabase');
+              localStorage.removeItem('financeiro_local_data');
+              window.location.reload();
             }
           }}
-          onLogout={logout}
+          onLogout={handleLogout}
           isAuthenticated={true}
         />
         <Box component="main" sx={{ flexGrow: 1 }}>
