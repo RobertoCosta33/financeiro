@@ -69,6 +69,108 @@
         button:hover {
             background-color: #1565c0;
         }
+        
+        .app-section {
+            margin-top: 32px;
+            padding: 24px;
+            background-color: #fff;
+            border-radius: 8px;
+            max-width: 600px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .app-section h3 {
+            font-size: 24px;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+        
+        .finance-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        
+        .btn-success {
+            background-color: #4caf50 !important;
+        }
+        
+        .btn-success:hover {
+            background-color: #45a049 !important;
+        }
+        
+        .btn-danger {
+            background-color: #f44336 !important;
+        }
+        
+        .btn-danger:hover {
+            background-color: #da190b !important;
+        }
+        
+        .balance-display {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .balance-display h4 {
+            margin: 0 0 8px 0;
+            color: #666;
+        }
+        
+        .saldo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1976d2;
+        }
+        
+        .transactions h4 {
+            margin: 0 0 12px 0;
+            color: #666;
+        }
+        
+        .transacoes-lista {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .transacao {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin: 4px 0;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #ddd;
+        }
+        
+        .transacao.receita {
+            border-left-color: #4caf50;
+        }
+        
+        .transacao.despesa {
+            border-left-color: #f44336;
+        }
+        
+        .transacao-valor {
+            font-weight: bold;
+        }
+        
+        .transacao.receita .transacao-valor {
+            color: #4caf50;
+        }
+        
+        .transacao.despesa .transacao-valor {
+            color: #f44336;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -82,23 +184,137 @@
         <p>✅ CSS inline carregado</p>
         <p>✅ GitHub Pages funcionando</p>
         <p>✅ JavaScript básico ativo</p>
+        <p>✅ Interação funcionando</p>
     </div>
 
-    <button onclick="testarInteracao()">
-        Testar Interação
-    </button>
+    <div class="app-section">
+        <h3>💰 Sistema Financeiro</h3>
+        <div class="finance-controls">
+            <button onclick="adicionarReceita()" class="btn-success">
+                ➕ Adicionar Receita
+            </button>
+            <button onclick="adicionarDespesa()" class="btn-danger">
+                ➖ Adicionar Despesa
+            </button>
+        </div>
+        
+        <div class="balance-display">
+            <h4>Saldo Atual:</h4>
+            <div id="saldo" class="saldo">R$ 0,00</div>
+        </div>
+        
+        <div class="transactions">
+            <h4>Transações:</h4>
+            <div id="transacoes" class="transacoes-lista">
+                <p class="empty-state">Nenhuma transação ainda</p>
+            </div>
+        </div>
+    </div>
 
     <script>
         console.log('Página carregada completamente!');
         
-        function testarInteracao() {
-            console.log('Botão clicado!');
-            alert('🎉 Interação funcionando perfeitamente!');
+        // Dados da aplicação
+        let saldo = 0;
+        let transacoes = [];
+        
+        // Carregar dados do localStorage
+        function carregarDados() {
+            const dadosSalvos = localStorage.getItem('financeiro_dados');
+            if (dadosSalvos) {
+                const dados = JSON.parse(dadosSalvos);
+                saldo = dados.saldo || 0;
+                transacoes = dados.transacoes || [];
+                atualizarInterface();
+            }
         }
         
-        // Teste adicional
+        // Salvar dados no localStorage
+        function salvarDados() {
+            const dados = {
+                saldo: saldo,
+                transacoes: transacoes
+            };
+            localStorage.setItem('financeiro_dados', JSON.stringify(dados));
+        }
+        
+        // Atualizar interface
+        function atualizarInterface() {
+            document.getElementById('saldo').textContent = formatarMoeda(saldo);
+            atualizarListaTransacoes();
+        }
+        
+        // Formatar moeda
+        function formatarMoeda(valor) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor);
+        }
+        
+        // Atualizar lista de transações
+        function atualizarListaTransacoes() {
+            const container = document.getElementById('transacoes');
+            
+            if (transacoes.length === 0) {
+                container.innerHTML = '<p class="empty-state">Nenhuma transação ainda</p>';
+                return;
+            }
+            
+            container.innerHTML = transacoes.map((transacao, index) => `
+                <div class="transacao ${transacao.tipo}">
+                    <span>${transacao.descricao}</span>
+                    <span class="transacao-valor">${transacao.tipo === 'receita' ? '+' : '-'} ${formatarMoeda(transacao.valor)}</span>
+                </div>
+            `).join('');
+        }
+        
+        // Adicionar receita
+        function adicionarReceita() {
+            const valor = prompt('Digite o valor da receita:');
+            if (valor && !isNaN(valor)) {
+                const descricao = prompt('Digite a descrição da receita:') || 'Receita';
+                const valorNumerico = parseFloat(valor);
+                
+                saldo += valorNumerico;
+                transacoes.unshift({
+                    tipo: 'receita',
+                    valor: valorNumerico,
+                    descricao: descricao,
+                    data: new Date().toISOString()
+                });
+                
+                salvarDados();
+                atualizarInterface();
+                alert('Receita adicionada com sucesso!');
+            }
+        }
+        
+        // Adicionar despesa
+        function adicionarDespesa() {
+            const valor = prompt('Digite o valor da despesa:');
+            if (valor && !isNaN(valor)) {
+                const descricao = prompt('Digite a descrição da despesa:') || 'Despesa';
+                const valorNumerico = parseFloat(valor);
+                
+                saldo -= valorNumerico;
+                transacoes.unshift({
+                    tipo: 'despesa',
+                    valor: valorNumerico,
+                    descricao: descricao,
+                    data: new Date().toISOString()
+                });
+                
+                salvarDados();
+                atualizarInterface();
+                alert('Despesa adicionada com sucesso!');
+            }
+        }
+        
+        // Inicializar aplicação
         window.addEventListener('load', function() {
             console.log('Window load event disparado!');
+            carregarDados();
         });
         
         document.addEventListener('DOMContentLoaded', function() {
