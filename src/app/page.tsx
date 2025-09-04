@@ -1,74 +1,85 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
+import { Box, Typography } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+import { lightTheme, darkTheme } from '../templates/theme';
+import Header from '../components/Header';
+import Dashboard from '../components/Dashboard';
+import { LoginForm } from '../components/Auth/LoginForm';
+import { useFinancialData } from '../hooks/useFinancialData';
+import { useAuth } from '../hooks/useAuth';
+import { resetToDefaultData } from '../utils/storage';
+
 export default function Home() {
-  // Adicionar script inline para garantir que JavaScript funcione
-  if (typeof window !== 'undefined') {
-    window.addEventListener('load', () => {
-      console.log('Página carregada completamente!');
-    });
-  }
-  return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: '100vh',
-      flexDirection: 'column',
-      gap: '24px',
-      padding: '24px',
-      fontFamily: 'Arial, sans-serif'
-    }}>
-      <h1 style={{ fontSize: '48px', margin: 0 }}>
-        💰 Sistema Financeiro
-      </h1>
-      
-      <h2 style={{ fontSize: '24px', color: '#666', margin: 0, textAlign: 'center' }}>
-        Aplicação Online Funcionando!
-      </h2>
+  const { data, updateTheme } = useFinancialData();
+  const { user, isAuthenticated, logout, loading } = useAuth();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
-      <div style={{ 
-        marginTop: '32px', 
-        padding: '24px', 
-        backgroundColor: '#f5f5f5', 
-        borderRadius: '8px', 
-        maxWidth: '400px',
-        border: '1px solid #ddd'
+  const handleThemeToggle = () => {
+    const newMode = data.theme.mode === 'light' ? 'dark' : 'light';
+    updateTheme({ mode: newMode });
+  };
+
+  const handleSettingsClick = () => {
+    setSettingsOpen(true);
+  };
+
+  const handleResetData = () => {
+    if (window.confirm('Tem certeza que deseja resetar todos os dados? Esta ação não pode ser desfeita.')) {
+      resetToDefaultData();
+      window.location.reload();
+    }
+  };
+
+  const handleLogout = async () => {
+    if (window.confirm('Tem certeza que deseja sair?')) {
+      await logout();
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '100vh' 
       }}>
-        <h3 style={{ fontSize: '20px', margin: '0 0 16px 0' }}>
-          🎉 Status da Aplicação:
-        </h3>
-        <p style={{ color: '#4caf50', margin: '8px 0' }}>
-          ✅ React funcionando perfeitamente
-        </p>
-        <p style={{ color: '#4caf50', margin: '8px 0' }}>
-          ✅ Next.js carregado
-        </p>
-        <p style={{ color: '#4caf50', margin: '8px 0' }}>
-          ✅ GitHub Pages funcionando
-        </p>
-        <p style={{ color: '#4caf50', margin: '8px 0' }}>
-          ✅ Deploy automático ativo
-        </p>
-      </div>
+        <Typography variant="h4">Carregando...</Typography>
+      </Box>
+    );
+  }
 
-      <button 
-        style={{
-          marginTop: '16px',
-          padding: '12px 24px',
-          fontSize: '16px',
-          backgroundColor: '#1976d2',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer'
-        }}
-        onClick={() => {
-          console.log('Botão clicado!');
-          window.alert('🎉 Interação funcionando perfeitamente!');
-        }}
-      >
-        Testar Interação
-      </button>
-    </div>
+  const theme = data.theme.mode === 'light' ? lightTheme : darkTheme;
+
+  // Se não estiver autenticado, mostrar tela de login
+  if (!isAuthenticated) {
+    return (
+      <ThemeProvider theme={lightTheme}>
+        <CssBaseline />
+        <LoginForm />
+      </ThemeProvider>
+    );
+  }
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Header
+          theme={data.theme.mode}
+          onThemeToggle={handleThemeToggle}
+          onSettingsClick={handleSettingsClick}
+          onResetData={handleResetData}
+          onLogout={handleLogout}
+          isAuthenticated={isAuthenticated}
+        />
+        <Box component="main" sx={{ flexGrow: 1 }}>
+          <Dashboard />
+        </Box>
+      </Box>
+    </ThemeProvider>
   );
 }
