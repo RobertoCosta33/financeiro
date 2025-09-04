@@ -23,13 +23,7 @@ import { Balance, Debt } from '../../types';
 import { formatCurrency, calculateTotalRemainingDebts, calculateMonthlyDebts } from '../../utils/calculations';
 import BalanceForm from '../BalanceForm';
 import {
-  StyledPaper,
-  TableContainer,
-  TableHeader,
-  SummaryContainer,
-  SummaryCard,
-  SummaryCardRed,
-  SummaryCardGreen
+  TableContainer
 } from './styles';
 
 interface BalanceTableProps {
@@ -95,8 +89,15 @@ const BalanceTable: React.FC<BalanceTableProps> = ({
   const availableBalance = totalBalances - monthlyDebts;
 
   return (
-    <StyledPaper>
-      <TableHeader>
+    <Paper sx={{ padding: 3, marginBottom: 3, borderRadius: 3, boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}>
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        marginBottom: 3, 
+        flexWrap: 'wrap', 
+        gap: 2 
+      }}>
         <Typography variant="h5" fontWeight="bold">
           <AccountBalanceIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
           Controle de Saldos e Disponibilidade Mensal
@@ -108,10 +109,21 @@ const BalanceTable: React.FC<BalanceTableProps> = ({
         >
           Adicionar Saldo
         </Button>
-      </TableHeader>
+      </Box>
 
-      <SummaryContainer>
-        <SummaryCard>
+      <Box sx={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+        gap: 2, 
+        marginBottom: 3 
+      }}>
+        <Box sx={{
+          padding: 2,
+          borderRadius: 2,
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          textAlign: 'center'
+        }}>
           <Typography variant="h6" fontWeight="bold">
             Total de Saldos
           </Typography>
@@ -121,9 +133,15 @@ const BalanceTable: React.FC<BalanceTableProps> = ({
           <Typography variant="body2">
             {balances.length} saldo{balances.length !== 1 ? 's' : ''} cadastrado{balances.length !== 1 ? 's' : ''}
           </Typography>
-        </SummaryCard>
+        </Box>
 
-        <SummaryCardRed>
+        <Box sx={{
+          padding: 2,
+          borderRadius: 2,
+          background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+          color: 'white',
+          textAlign: 'center'
+        }}>
           <Typography variant="h6" fontWeight="bold">
             Dívidas Mensais
           </Typography>
@@ -133,9 +151,15 @@ const BalanceTable: React.FC<BalanceTableProps> = ({
           <Typography variant="body2">
             {debts.length} dívida{debts.length !== 1 ? 's' : ''} pendente{debts.length !== 1 ? 's' : ''}
           </Typography>
-        </SummaryCardRed>
+        </Box>
 
-        <SummaryCard>
+        <Box sx={{
+          padding: 2,
+          borderRadius: 2,
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          textAlign: 'center'
+        }}>
           <Typography variant="h6" fontWeight="bold">
             Total de Dívidas
           </Typography>
@@ -145,9 +169,15 @@ const BalanceTable: React.FC<BalanceTableProps> = ({
           <Typography variant="body2">
             Valor total restante
           </Typography>
-        </SummaryCard>
+        </Box>
 
-        <SummaryCardGreen>
+        <Box sx={{
+          padding: 2,
+          borderRadius: 2,
+          background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+          color: 'white',
+          textAlign: 'center'
+        }}>
           <Typography variant="h6" fontWeight="bold">
             Saldo Disponível
           </Typography>
@@ -157,8 +187,8 @@ const BalanceTable: React.FC<BalanceTableProps> = ({
           <Typography variant="body2">
             {availableBalance >= 0 ? 'Saldo positivo' : 'Saldo negativo'}
           </Typography>
-        </SummaryCardGreen>
-      </SummaryContainer>
+        </Box>
+      </Box>
 
       <TableContainer>
         <MuiTableContainer component={Paper} sx={{ borderRadius: 2 }}>
@@ -270,7 +300,7 @@ const BalanceTable: React.FC<BalanceTableProps> = ({
         onSubmit={handleAddBalance}
         balance={editingBalance}
       />
-    </StyledPaper>
+          </Paper>
   );
 };
 
