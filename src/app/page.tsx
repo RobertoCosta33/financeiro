@@ -1,8 +1,36 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export default function Home() {
+  useEffect(() => {
+    // Adicionar event listeners inline para garantir funcionamento
+    const testButton = document.getElementById('test-button');
+    const themeButton = document.getElementById('theme-button');
+    
+    if (testButton) {
+      testButton.addEventListener('click', () => {
+        console.log('BOTÃO TESTE CLICADO!');
+        alert('🎉 BOTÃO FUNCIONANDO! JavaScript está OK!');
+      });
+    }
+    
+    if (themeButton) {
+      themeButton.addEventListener('click', () => {
+        console.log('BOTÃO TEMA CLICADO!');
+        alert('🎨 Tema alternado!');
+      });
+    }
+    
+    // Atualizar URL
+    const urlElement = document.getElementById('url-display');
+    if (urlElement) {
+      urlElement.textContent = window.location.href;
+    }
+    
+    console.log('PÁGINA CARREGADA COM JAVASCRIPT INLINE!');
+  }, []);
+
   return (
     <div style={{ 
       padding: '20px', 
@@ -42,14 +70,11 @@ export default function Home() {
           border: '1px solid #1976d2'
         }}>
           <h3 style={{ color: '#1976d2', margin: '0 0 10px 0' }}>
-            🧪 Teste de Botões:
+            🧪 Teste de Botões (JavaScript Inline):
           </h3>
           
           <button 
-            onClick={() => {
-              console.log('BOTÃO TESTE CLICADO!');
-              alert('🎉 BOTÃO FUNCIONANDO! JavaScript está OK!');
-            }}
+            id="test-button"
             style={{
               padding: '10px 20px',
               fontSize: '16px',
@@ -65,10 +90,7 @@ export default function Home() {
           </button>
           
           <button 
-            onClick={() => {
-              console.log('BOTÃO TEMA CLICADO!');
-              alert('🎨 Tema alternado!');
-            }}
+            id="theme-button"
             style={{
               padding: '10px 20px',
               fontSize: '16px',
@@ -107,8 +129,42 @@ export default function Home() {
         color: '#666'
       }}>
         <p>🕐 Timestamp: {new Date().toLocaleString('pt-BR')}</p>
-        <p>🌐 URL: {typeof window !== 'undefined' ? window.location.href : 'Carregando...'}</p>
+        <p>🌐 URL: <span id="url-display">Carregando...</span></p>
       </div>
+      
+      {/* Script inline para garantir funcionamento */}
+      <script dangerouslySetInnerHTML={{
+        __html: `
+          console.log('SCRIPT INLINE CARREGADO!');
+          
+          // Adicionar listeners quando DOM estiver pronto
+          document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM CARREGADO!');
+            
+            const testBtn = document.getElementById('test-button');
+            const themeBtn = document.getElementById('theme-button');
+            const urlDisplay = document.getElementById('url-display');
+            
+            if (testBtn) {
+              testBtn.addEventListener('click', function() {
+                console.log('BOTÃO TESTE CLICADO VIA SCRIPT INLINE!');
+                alert('🎉 BOTÃO FUNCIONANDO! JavaScript inline está OK!');
+              });
+            }
+            
+            if (themeBtn) {
+              themeBtn.addEventListener('click', function() {
+                console.log('BOTÃO TEMA CLICADO VIA SCRIPT INLINE!');
+                alert('🎨 Tema alternado via script inline!');
+              });
+            }
+            
+            if (urlDisplay) {
+              urlDisplay.textContent = window.location.href;
+            }
+          });
+        `
+      }} />
     </div>
   );
 }
